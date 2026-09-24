@@ -6,7 +6,7 @@
 
 {
 
-  // Rebuild plasma for speed
+  # Rebuild plasma for speed
   nixpkgs.overlays = lib.singleton (final: prev: {
     kdePackages = prev.kdePackages // {
       plasma-workspace = let
