@@ -67,6 +67,8 @@
 
   # hardware.enableAllHardware = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   environment.etc."nixos" = {
     source = "/home/carter/.config/nixos/";
     mode = "symlink";

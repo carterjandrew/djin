@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 
 {
   # Home Manager needs a bit of information about you and the
@@ -6,9 +6,21 @@
   home.username = "carter";
   home.homeDirectory = "/home/carter";
 
+  imports = [ inputs.nixcord.homeModules.nixcord ];
+
+  programs.nixcord = {
+    enable = true;
+    discord.vencord.enable = true;
+    # Use the release's Vencord package; Nixcord's default requires pnpm_12.
+    discord.vencord.package = pkgs.vencord;
+    # user = "carterjandrew";
+  };
+
   home.packages = with pkgs; [
+    gh
     htop
     sops
+    kitty
     devenv
     home-manager
   ];
@@ -42,4 +54,3 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
-
