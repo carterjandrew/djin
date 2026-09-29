@@ -6,24 +6,27 @@
   home.username = "carter";
   home.homeDirectory = "/home/carter";
 
-  home.packages = [
-    pkgs.htop
-    pkgs.fortune
-    pkgs.home-manager
+  home.packages = with pkgs; [
+    htop
+    sops
+    devenv
+    home-manager
   ];
 
-  programs.emacs = {
+  programs.neovim = {
     enable = true;
-    extraPackages = epkgs: [
-      epkgs.nix-mode
-      epkgs.magit
-    ];
   };
 
-  services.gpg-agent = {
+  programs.helix = {
     enable = true;
-    defaultCacheTtl = 1800;
-    enableSshSupport = true;
+  };
+
+  programs.bash = {
+    enable = true;
+    shellAliases = {
+      rebuild = "sudo nixos-rebuild switch --flake /home/carter/.config/nixos/";
+      secrets = "sudo sops ~/.config/nixos";
+    };
   };
 
   # This value determines the Home Manager release that your

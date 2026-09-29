@@ -67,6 +67,11 @@
 
   # hardware.enableAllHardware = true;
 
+  environment.etc."nixos" = {
+    source = "/home/carter/.config/nixos/";
+    mode = "symlink";
+  };
+
   networking.hostName = "djin"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
@@ -132,6 +137,10 @@
     packages = with pkgs; [
       tree
     ];
+  };
+
+  environment.variables = {
+    EDITOR = "nvim";
   };
 
   programs.firefox.enable = true;
