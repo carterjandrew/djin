@@ -24,8 +24,8 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-      rebuild = "sudo nixos-rebuild switch --flake /home/carter/.config/nixos/";
-      secrets = "sudo sops ~/.config/nixos";
+      rebuild = "sudo nixos-rebuild switch";
+      secrets = "sudo sops ~/.config/nixos/secrets/secrets.yaml";
     };
   };
 
