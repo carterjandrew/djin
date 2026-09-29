@@ -8,6 +8,16 @@
 
   imports = [ inputs.nixcord.homeModules.nixcord ];
 
+  home.packages = with pkgs; [
+    gh
+    htop
+    sops
+    kitty
+    devenv
+    koreader
+    home-manager
+  ];
+
   programs.nixcord = {
     enable = true;
     discord.vencord.enable = true;
@@ -15,15 +25,6 @@
     discord.vencord.package = pkgs.vencord;
     # user = "carterjandrew";
   };
-
-  home.packages = with pkgs; [
-    gh
-    htop
-    sops
-    kitty
-    devenv
-    home-manager
-  ];
 
   programs.neovim = {
     enable = true;
