@@ -15,6 +15,7 @@
     kitty
     devenv
     koreader
+    thunderbird
     home-manager
   ];
 
