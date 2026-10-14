@@ -8,23 +8,29 @@
 
   imports = [ inputs.nixcord.homeModules.nixcord ];
 
-  home.packages = with pkgs; [
-    gh
-    htop
-    sops
-    kitty
-    devenv
-    koreader
-    thunderbird
-    home-manager
+  home.packages = [
+    pkgs.gh
+    pkgs.htop
+    pkgs.tmux
+    pkgs.sops
+    pkgs.fokus
+    pkgs.codex
+    pkgs.kitty
+    pkgs.devenv
+    pkgs.neovide
+    pkgs.koreader
+    pkgs.obsidian
+    pkgs.thunderbird
+    pkgs.jetbrains-mono
+    pkgs.kdePackages.krohnkite
+    pkgs.plasma-panel-colorizer
+    inputs.geometry-change.packages.${pkgs.system}.default
   ];
 
   programs.nixcord = {
     enable = true;
     discord.vencord.enable = true;
-    # Use the release's Vencord package; Nixcord's default requires pnpm_12.
     discord.vencord.package = pkgs.vencord;
-    # user = "carterjandrew";
   };
 
   programs.neovim = {

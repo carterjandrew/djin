@@ -39,7 +39,7 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "Amercia/Guatemala";
+  time.timeZone = "America/Guatemala";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -55,43 +55,18 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # Enable the X11 windowing system.
-  # services.xserver.enable = true;
-
-
-  
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
   # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # services.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
+  services.printing.enable = true;
 
   services = {
     desktopManager.plasma6.enable = true;
-
-    # Default display manager for Plasma
     displayManager.plasma-login-manager.enable = true;
-
-    # Optionally enable xserver
-    # xserver.enable = true;
   };
+
+  programs.azrah.enable = true;
 
   hardware.bluetooth.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.carter = {
     isNormalUser = true;
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
@@ -101,19 +76,10 @@
     ];
   };
 
-  # This will add secrets.yml to the nix store
-  # You can avoid this by adding a string to the full path instead, i.e.
-  # sops.defaultSopsFile = "/root/.sops/secrets/example.yaml";
   sops.defaultSopsFile = secrets/secrets.yaml;
-  # This will automatically import SSH keys as age keys
-  # sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-  # This is using an age key that is expected to already be in the filesystem
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
-  # This will generate a new key if the key specified above does not exist
   sops.age.generateKey = true;
-  # This is the actual specification of the secrets.
   sops.secrets.example_key = {};
-  # sops.secrets.headscale_preauthkey = {};
 
   environment.variables = {
     EDITOR = "nvim";
@@ -134,22 +100,10 @@
     enable = true;
   };
 
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
   ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
