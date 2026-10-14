@@ -6,7 +6,11 @@
   home.username = "carter";
   home.homeDirectory = "/home/carter";
 
-  imports = [ inputs.nixcord.homeModules.nixcord ];
+  imports = [
+    inputs.nixcord.homeModules.nixcord
+    inputs.plasma-manager.homeModules.plasma-manager
+    ./modules/plasma-config.nix
+  ];
 
   home.packages = [
     pkgs.gh
