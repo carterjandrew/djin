@@ -16,6 +16,7 @@
     pkgs.fokus
     pkgs.codex
     pkgs.kitty
+    pkgs.neovim
     pkgs.devenv
     pkgs.neovide
     pkgs.koreader
@@ -33,10 +34,6 @@
     discord.vencord.package = pkgs.vencord;
   };
 
-  programs.neovim = {
-    enable = true;
-  };
-
   programs.helix = {
     enable = true;
   };
@@ -46,6 +43,8 @@
     shellAliases = {
       rebuild = "sudo nixos-rebuild switch";
       secrets = "sudo sops ~/.config/nixos/secrets/secrets.yaml";
+      light = "~/.config/nixos/bash_scripts/light";
+      dark = "~/.config/nixos/bash_scripts/dark";
     };
   };
 
