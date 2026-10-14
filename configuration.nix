@@ -24,8 +24,7 @@
   };
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # hardware.enableAllHardware = true;
-
+  # TODO: Not working?
   nixpkgs.config.allowUnfree = true;
 
   environment.etc."nixos" = {

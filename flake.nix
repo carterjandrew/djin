@@ -22,6 +22,10 @@
       url = "github:carterjandrew/kwin4_effect_geometry_change";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    kitty-themes = {
+      url = "github:dexpota/kitty-themes";
+      flake = false;
+    };
     nixcord.url = "github:4evy/nixcord";
   };
 

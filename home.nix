@@ -1,6 +1,24 @@
 { inputs, config, pkgs, ... }:
 
-{
+let
+  configRoot = "${config.home.homeDirectory}/.config/nixos";
+  themeSwitcher = name: colorScheme: themeFile:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = [
+        pkgs.coreutils
+        pkgs.kdePackages.plasma-workspace
+        pkgs.procps
+      ];
+      text = ''
+        plasma-apply-colorscheme ${colorScheme} || true
+        install -Dm0644 \
+          ${inputs.kitty-themes}/themes/${themeFile} \
+          "$HOME/.config/kitty/theme.conf"
+        pkill -USR1 -u "$UID" kitty 2>/dev/null || true
+      '';
+    };
+in {
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = "carter";
@@ -30,7 +48,16 @@
     pkgs.kdePackages.krohnkite
     pkgs.plasma-panel-colorizer
     inputs.geometry-change.packages.${pkgs.system}.default
+    (themeSwitcher "light" "BreezeLight" "Material.conf")
+    (themeSwitcher "dark" "BreezeDark" "Smyck.conf")
   ];
+
+  # These links point at the checkout instead of the Nix store, so edits to
+  # application configuration take effect without another rebuild.
+  xdg.configFile."kitty/kitty.conf".source =
+    config.lib.file.mkOutOfStoreSymlink "${configRoot}/dotfiles/kitty/kitty.conf";
+  xdg.configFile."nvim".source =
+    config.lib.file.mkOutOfStoreSymlink "${configRoot}/dotfiles/nvim";
 
   programs.nixcord = {
     enable = true;
@@ -47,8 +74,6 @@
     shellAliases = {
       rebuild = "sudo nixos-rebuild switch";
       secrets = "sudo sops ~/.config/nixos/secrets/secrets.yaml";
-      light = "~/.config/nixos/bash_scripts/light";
-      dark = "~/.config/nixos/bash_scripts/dark";
     };
   };
 

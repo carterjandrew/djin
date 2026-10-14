@@ -83,6 +83,22 @@
         "type": "github"
       }
     },
+    "kitty-themes": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789573030,
+        "narHash": "sha256-yIe1+GmEfqjU/HTi0ubkqAqErmC7fkXrSQtc28CS7JA=",
+        "owner": "dexpota",
+        "repo": "kitty-themes",
+        "rev": "69cdbd19be35470daccc826f34d68d36b6fdf006",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dexpota",
+        "repo": "kitty-themes",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -217,6 +233,7 @@
         "azrah": "azrah",
         "geometry-change": "geometry-change",
         "home-manager": "home-manager",
+        "kitty-themes": "kitty-themes",
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_2",
         "plasma-manager": "plasma-manager",
