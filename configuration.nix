@@ -17,22 +17,103 @@
       ./modules/plasma-workspace.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 10;
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowInsecurePredicate = pkg: (pkg.pname) == "broadcom-sta";
   };
-  boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
+  boot.loader.grub.efiInstallAsRemovable = true;
+  boot.loader.efi.canTouchEfiVariables = false;
+
+  # Grub menu is painted really slowly on HiDPI, so we lower the
+  # resolution. Unfortunately, scaling to 1280x720 (keeping aspect
+  # ratio) doesn't seem to work, so we just pick another low one.
+  boot.loader.grub.gfxmodeEfi = "1024x768";
+
+  boot.initrd.luks.devices = {
+    luksroot = {
+      name = "root";
+      device = "/dev/disk/by-uuid/5c353b9b-5fe2-41c8-9347-a97eda0d2961";
+      preLVM = true;
+      allowDiscards = true;
+    };
+  };
+
+  boot.extraModulePackages = [
+    config.boot.kernelPackages.broadcom_sta
+  ];
+  boot.kernelModules = [ "wl" ];
+  boot.blacklistedKernelModules = [
+    "b43"
+    "b43legacy"
+    "ssb"
+    "bcma"
+    "brcmsmac"
+  ];
+
+  # Avoid latency spikes from issuing synchronous TRIM commands during normal
+  # filesystem activity.  The periodic fstrim service below batches them
+  # instead; LUKS discard pass-through remains enabled above.
+  fileSystems."/".options = [ "noatime" ];
+  services.fstrim.enable = true;
+
+  # This Apple/Samsung SSD can spend over a second flushing its volatile
+  # write cache, stalling all I/O and making cold application starts take
+  # minutes.  Disabling the drive cache avoids those firmware stalls while
+  # retaining filesystem write-ordering guarantees.
+  systemd.services.disable-apple-ssd-write-cache = {
+    description = "Disable the Apple SSD volatile write cache";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "display-manager.service" ];
+    after = [ "dev-sda.device" ];
+    requires = [ "dev-sda.device" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.hdparm}/bin/hdparm -W0 /dev/sda";
+      RemainAfterExit = true;
+    };
+  };
+
+  # Nouveau leaves this Kepler GPU below its lowest advertised performance
+  # state.  The moderate 0a state keeps the 2880x1800 desktop responsive
+  # without forcing the GPU's maximum memory clock.
+  systemd.services.nouveau-performance-state = {
+    description = "Set Nouveau GPU performance state to 0a";
+    wantedBy = [ "multi-user.target" ];
+    before = [ "display-manager.service" ];
+    after = [ "sys-kernel-debug.mount" "systemd-modules-load.service" ];
+    requires = [ "sys-kernel-debug.mount" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      for attempt in {1..50}; do
+        test -e /sys/kernel/debug/dri/0/pstate && break
+        sleep 0.1
+      done
+      echo 0a > /sys/kernel/debug/dri/0/pstate
+    '';
+  };
+
+  # Reapply hardware performance settings after a suspend cycle.
+  powerManagement.resumeCommands = ''
+    ${pkgs.hdparm}/bin/hdparm -W0 /dev/sda
+    echo 0a > /sys/kernel/debug/dri/0/pstate
+  '';
 
   # TODO: Not working?
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
 
-  environment.etc."nixos" = {
-    source = "/home/carter/.config/nixos/";
-    mode = "symlink";
-  };
+  # environment.etc."nixos" = {
+  #   source = "/home/carter/.config/nixos/";
+  #   mode = "symlink";
+  # };
 
-  networking.hostName = "djin"; # Define your hostname.
+  networking.hostName = "nosferatu"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
@@ -105,7 +186,7 @@
   ];
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

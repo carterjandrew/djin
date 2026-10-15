@@ -37,7 +37,7 @@
     azrah,
     ...
   }: {
-    nixosConfigurations.djin = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nosferatu = nixpkgs.lib.nixosSystem {
       modules = [
         ./configuration.nix 
 	sops-nix.nixosModules.sops
