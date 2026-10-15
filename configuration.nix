@@ -6,10 +6,17 @@
 #         \/\______|       \/
 #     Lightning in a bottle
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
 
+  nixpkgs.overlays = [
+    (final: prev: {
+      unstable = import inputs.nixpkgs-unstable {
+      system = prev.stdenv.hostPlatform.system;
+      };
+    })
+  ];
 
   imports =
     [ # Include the results of the hardware scan.

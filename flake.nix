@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.zst";
+    nixpkgs-unstable.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     sops-nix = {
         url = "github:Mic92/sops-nix";
   	inputs.nixpkgs.follows = "nixpkgs";
@@ -30,14 +31,15 @@
   };
 
   outputs = inputs@{
-    nixpkgs,
-    home-manager,
-    sops-nix,
-    geometry-change,
     azrah,
+    nixpkgs,
+    sops-nix,
+    home-manager,
+    geometry-change,
     ...
   }: {
     nixosConfigurations.djin = nixpkgs.lib.nixosSystem {
+      specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix 
 	sops-nix.nixosModules.sops

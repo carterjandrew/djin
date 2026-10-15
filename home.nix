@@ -35,18 +35,26 @@ in {
     pkgs.htop
     pkgs.tmux
     pkgs.sops
+    pkgs.cmus
+    pkgs.gimp
     pkgs.fokus
+    pkgs.kiwix
     pkgs.codex
     pkgs.kitty
     pkgs.neovim
     pkgs.devenv
+    pkgs.reaper
+    pkgs.blender
     pkgs.neovide
     pkgs.koreader
     pkgs.obsidian
-    pkgs.thunderbird
+    pkgs.qutebrowser
+    pkgs.unstable.thunderbird
     pkgs.jetbrains-mono
+    pkgs.whatsapp-electron
     pkgs.kdePackages.krohnkite
     pkgs.plasma-panel-colorizer
+    pkgs.kdePackages.kdeconnect-kde
     inputs.geometry-change.packages.${pkgs.system}.default
     (themeSwitcher "light" "BreezeLight" "Material.conf")
     (themeSwitcher "dark" "BreezeDark" "Smyck.conf")
@@ -58,6 +66,27 @@ in {
     config.lib.file.mkOutOfStoreSymlink "${configRoot}/dotfiles/kitty/kitty.conf";
   xdg.configFile."nvim".source =
     config.lib.file.mkOutOfStoreSymlink "${configRoot}/dotfiles/nvim";
+  
+  services.syncthing = {
+    enable = true;
+    overrideDevices = true;
+    overrideFolders = true;
+    settings = {
+      devices.server = {
+        id = "G4VPC2F-TRVCNOF-WLOV2AX-AMPYXFU-VMF6GDA-XZQ5VUA-YHY7LBW-OOTNPAE";
+      };
+
+      folders.Music = {
+        path = "/home/carter/Music";
+        devices = [ "server" ];
+      };
+
+      folders.Notes = {
+        path = "/home/carter/pd/notes";
+        devices = [ "server" ];
+      };
+    };
+  };
 
   programs.nixcord = {
     enable = true;
