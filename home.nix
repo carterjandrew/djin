@@ -40,7 +40,7 @@ in {
     pkgs.gimp
     pkgs.fokus
     pkgs.kiwix
-    pkgs.codex
+    pkgs.unstable.codex
     pkgs.kitty
     pkgs.neovim
     pkgs.devenv

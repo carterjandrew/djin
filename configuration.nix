@@ -40,7 +40,7 @@
   # Grub menu is painted really slowly on HiDPI, so we lower the
   # resolution. Unfortunately, scaling to 1280x720 (keeping aspect
   # ratio) doesn't seem to work, so we just pick another low one.
-  boot.loader.grub.gfxmodeEfi = "1024x768";
+  # boot.loader.grub.gfxmodeEfi = "1024x768";
 
   boot.initrd.luks.devices = {
     luksroot = {
@@ -51,6 +51,11 @@
     };
   };
 
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 30d";
+  };
 
   # TODO: Not working?
   nixpkgs.config.allowUnfree = true;
