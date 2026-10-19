@@ -112,6 +112,26 @@
     echo 0a > /sys/kernel/debug/dri/0/pstate
   '';
 
+  # Grub menu is painted really slowly on HiDPI, so we lower the
+  # resolution. Unfortunately, scaling to 1280x720 (keeping aspect
+  # ratio) doesn't seem to work, so we just pick another low one.
+  # boot.loader.grub.gfxmodeEfi = "1024x768";
+
+  boot.initrd.luks.devices = {
+    luksroot = {
+      name = "root";
+      device = "/dev/disk/by-uuid/643a8658-29d0-469c-a798-4f966be0a3f9";
+      preLVM = true;
+      allowDiscards = true;
+    };
+  };
+
+  nix.gc = {
+    automatic = true;
+    dates = "daily";
+    options = "--delete-older-than 30d";
+  };
+
   # TODO: Not working?
   # nixpkgs.config.allowUnfree = true;
 
@@ -172,8 +192,6 @@
     EDITOR = "nvim";
   };
 
-  programs.firefox.enable = true;
-
   programs.git = {
     enable = true;
     config = {
@@ -189,6 +207,7 @@
 
   environment.systemPackages = with pkgs; [
     vim
+    neovim
     wget
   ];
 

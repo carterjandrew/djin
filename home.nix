@@ -32,6 +32,7 @@ in {
 
   home.packages = [
     pkgs.gh
+    pkgs.vlc
     pkgs.htop
     pkgs.tmux
     pkgs.sops
@@ -39,16 +40,20 @@ in {
     pkgs.gimp
     pkgs.fokus
     pkgs.kiwix
-    pkgs.codex
+    pkgs.unstable.codex
     pkgs.kitty
     pkgs.neovim
     pkgs.devenv
     pkgs.reaper
+    pkgs.spotify
+    pkgs.firefox
+    pkgs.zathura
     pkgs.blender
     pkgs.neovide
     pkgs.koreader
     pkgs.obsidian
     pkgs.qutebrowser
+    pkgs.signal-desktop
     pkgs.unstable.thunderbird
     pkgs.jetbrains-mono
     pkgs.whatsapp-electron
