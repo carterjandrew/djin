@@ -24,20 +24,41 @@
       ./modules/plasma-workspace.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 10;
-  };
+  # https://bugzilla.kernel.org/show_bug.cgi?id=110941
+  boot.kernelParams = [ "intel_pstate=no_hwp" ];
+
+  # Supposedly better for the SSD.
+  fileSystems."/".options = [ "noatime" "nodiratime" "discard" ];
+
+  # Use the GRUB 2 boot loader.
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Grub menu is painted really slowly on HiDPI, so we lower the
+  # resolution. Unfortunately, scaling to 1280x720 (keeping aspect
+  # ratio) doesn't seem to work, so we just pick another low one.
+  boot.loader.grub.gfxmodeEfi = "1024x768";
+
+  boot.initrd.luks.devices = {
+    luksroot = {
+      name = "root";
+      device = "/dev/disk/by-uuid/643a8658-29d0-469c-a798-4f966be0a3f9";
+      preLVM = true;
+      allowDiscards = true;
+    };
+  };
+
 
   # TODO: Not working?
   nixpkgs.config.allowUnfree = true;
 
-  environment.etc."nixos" = {
-    source = "/home/carter/.config/nixos/";
-    mode = "symlink";
-  };
+  # environment.etc."nixos" = {
+  #   source = "/home/carter/.config/nixos/";
+  #   mode = "symlink";
+  # };
 
   networking.hostName = "djin"; # Define your hostname.
 
@@ -112,7 +133,7 @@
   ];
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
