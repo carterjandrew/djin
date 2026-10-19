@@ -117,15 +117,6 @@
   # ratio) doesn't seem to work, so we just pick another low one.
   # boot.loader.grub.gfxmodeEfi = "1024x768";
 
-  boot.initrd.luks.devices = {
-    luksroot = {
-      name = "root";
-      device = "/dev/disk/by-uuid/643a8658-29d0-469c-a798-4f966be0a3f9";
-      preLVM = true;
-      allowDiscards = true;
-    };
-  };
-
   nix.gc = {
     automatic = true;
     dates = "daily";
