@@ -46,6 +46,7 @@ in {
     pkgs.devenv
     pkgs.reaper
     pkgs.spotify
+    pkgs.firefox
     pkgs.zathura
     pkgs.blender
     pkgs.neovide

@@ -117,8 +117,6 @@
     EDITOR = "nvim";
   };
 
-  programs.firefox.enable = true;
-
   programs.git = {
     enable = true;
     config = {
@@ -134,6 +132,7 @@
 
   environment.systemPackages = with pkgs; [
     vim
+    neovim
     wget
   ];
 
