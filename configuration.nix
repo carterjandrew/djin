@@ -40,6 +40,23 @@
   # ratio) doesn't seem to work, so we just pick another low one.
   boot.loader.grub.gfxmodeEfi = "1024x768";
 
+  # The MacBookPro11,3 firmware normally hides the Intel GPU from non-macOS
+  # boot loaders.  Run this small EFI shim before displaying the NixOS menu so
+  # i915 can see the integrated GPU.  Keep the file pinned for reproducibility.
+  boot.loader.grub.extraFiles."EFI/custom/apple_set_os.efi" = pkgs.fetchurl {
+    url = "https://github.com/0xbb/apple_set_os.efi/releases/download/v1/apple_set_os.efi";
+    hash = "sha256-PuHraE6f1ZAdretfaTs3RgSw7AvOYEfusJU9rm1/1dY=";
+  };
+  boot.loader.grub.extraConfig = ''
+    search --no-floppy --set=apple_efi --file /EFI/custom/apple_set_os.efi
+    chainloader ($apple_efi)/EFI/custom/apple_set_os.efi
+    boot
+  '';
+
+  # Load Intel graphics early so it owns the internal panel before userspace
+  # starts.  The discrete GPU driver is left to normal PCI auto-detection.
+  boot.initrd.kernelModules = [ "i915" ];
+
   boot.initrd.luks.devices = {
     luksroot = {
       name = "root";
@@ -84,11 +101,11 @@
     };
   };
 
-  # Nouveau leaves this Kepler GPU below its lowest advertised performance
-  # state.  The moderate 0a state keeps the 2880x1800 desktop responsive
-  # without forcing the GPU's maximum memory clock.
-  systemd.services.nouveau-performance-state = {
-    description = "Set Nouveau GPU performance state to 0a";
+  # Apple GMUX can physically cut power to the unused discrete GPU once both
+  # graphics clients have registered with vga_switcheroo.  Refuse to do this
+  # unless Intel is the boot GPU, so an NVRAM reset cannot cause a black screen.
+  systemd.services.power-off-nvidia-gpu = {
+    description = "Power off the unused NVIDIA GPU";
     wantedBy = [ "multi-user.target" ];
     before = [ "display-manager.service" ];
     after = [ "sys-kernel-debug.mount" "systemd-modules-load.service" ];
@@ -98,18 +115,31 @@
       RemainAfterExit = true;
     };
     script = ''
+      if [ "$(cat /sys/bus/pci/devices/0000:00:02.0/boot_vga)" != 1 ]; then
+        echo "Refusing to power off NVIDIA: Intel is not the boot GPU" >&2
+        exit 1
+      fi
+
+      switch=/sys/kernel/debug/vgaswitcheroo/switch
       for attempt in {1..50}; do
-        test -e /sys/kernel/debug/dri/0/pstate && break
+        [ -e "$switch" ] && break
         sleep 0.1
       done
-      echo 0a > /sys/kernel/debug/dri/0/pstate
+      [ -e "$switch" ] || {
+        echo "vga_switcheroo did not become available" >&2
+        exit 1
+      }
+      echo OFF > "$switch"
     '';
   };
 
-  # Reapply hardware performance settings after a suspend cycle.
+  # Reapply hardware power settings after a suspend cycle.
   powerManagement.resumeCommands = ''
     ${pkgs.hdparm}/bin/hdparm -W0 /dev/sda
-    echo 0a > /sys/kernel/debug/dri/0/pstate
+    if [ "$(cat /sys/bus/pci/devices/0000:00:02.0/boot_vga)" = 1 ] \
+      && [ -e /sys/kernel/debug/vgaswitcheroo/switch ]; then
+      echo OFF > /sys/kernel/debug/vgaswitcheroo/switch
+    fi
   '';
 
   # Grub menu is painted really slowly on HiDPI, so we lower the
@@ -236,4 +266,3 @@
   system.stateVersion = "26.05"; # Did you read the comment?
 
 }
-

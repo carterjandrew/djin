@@ -54,6 +54,7 @@ in {
     pkgs.obsidian
     pkgs.qutebrowser
     pkgs.signal-desktop
+    pkgs.unstable.bubblewrap
     pkgs.unstable.thunderbird
     pkgs.jetbrains-mono
     pkgs.whatsapp-electron
