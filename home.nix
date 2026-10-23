@@ -43,17 +43,18 @@ in {
     pkgs.unstable.codex
     pkgs.kitty
     pkgs.neovim
-    pkgs.devenv
     pkgs.reaper
     pkgs.spotify
     pkgs.firefox
     pkgs.zathura
     pkgs.blender
     pkgs.neovide
+		pkgs.ripgrep
     pkgs.koreader
     pkgs.obsidian
     pkgs.qutebrowser
     pkgs.signal-desktop
+    pkgs.unstable.devenv
     pkgs.unstable.bubblewrap
     pkgs.unstable.thunderbird
     pkgs.jetbrains-mono

@@ -6,44 +6,26 @@
 
   # https://devenv.sh/packages/
   packages = with pkgs; [
+    git
     codex
   ];
 
-  # languages.nix = {
-  #   enable = true;
-  #   # lsp.enable = true;
-  # };
+  editors.neovim.enable = true;
+  languages.nix = {
+    enable = true;
+    lsp.enable = true;
+  };
 
-  # https://devenv.sh/languages/
-  # languages.rust.enable = true;
-
-  # https://devenv.sh/processes/
-  # processes.dev.exec = "${lib.getExe pkgs.watchexec} -n -- ls -la";
-
-  # https://devenv.sh/services/
-  # services.postgres.enable = true;
-
-  # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
-
-  # https://devenv.sh/basics/
-  enterShell = ''
-    hello         # Run scripts directly
-    git --version # Use packages
-  '';
-
-  # https://devenv.sh/tasks/
-  # tasks = {
-  #   "myproj:setup".exec = "mytool build";
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
-  # };
+  languages.lua = {
+    enable = true;
+    lsp.enable  = true;
+  };
 
   # https://devenv.sh/tests/
   enterTest = ''
     echo "Running tests"
     git --version | grep --color=auto "${pkgs.git.version}"
+    nix flake check . --no-build
   '';
 
   # https://devenv.sh/git-hooks/
