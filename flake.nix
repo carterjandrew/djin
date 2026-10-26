@@ -38,7 +38,7 @@
     geometry-change,
     ...
   }: {
-    nixosConfigurations.nosferatu = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.djin = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
         ./configuration.nix 

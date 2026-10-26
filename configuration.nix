@@ -22,7 +22,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./modules/plasma-workspace.nix
-			./nosferatu.nix
+			# ./nosferatu.nix
+			./djin.nix
     ];
 
   nixpkgs.config = {
@@ -45,12 +46,12 @@
   # TODO: Not working?
   # nixpkgs.config.allowUnfree = true;
 
-  # environment.etc."nixos" = {
-  #   source = "/home/carter/.config/nixos/";
-  #   mode = "symlink";
-  # };
+  environment.etc."nixos" = {
+    source = "/home/carter/.config/nixos/";
+    mode = "symlink";
+  };
 
-  networking.hostName = "nosferatu"; # Define your hostname.
+  networking.hostName = "djin"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
