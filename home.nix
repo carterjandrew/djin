@@ -38,6 +38,7 @@ in {
     pkgs.sops
     pkgs.cmus
     pkgs.gimp
+		pkgs.krita
     pkgs.fokus
     pkgs.kiwix
     pkgs.kitty
@@ -50,6 +51,7 @@ in {
     pkgs.neovide
 		pkgs.ripgrep
 		pkgs.hunspell
+		pkgs.inkscape
     pkgs.koreader
     pkgs.obsidian
     pkgs.qutebrowser
