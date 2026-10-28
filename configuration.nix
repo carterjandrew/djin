@@ -100,6 +100,7 @@
       init.defaultBranch = "main";
       user.email = "carterinmotion@gmail.com";
       user.name = "Carter Andrew";
+			pull.rebase = true;
     };
   };
 
