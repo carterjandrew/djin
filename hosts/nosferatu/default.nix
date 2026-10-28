@@ -8,6 +8,11 @@
 
 { config, pkgs, ... }:
 {
+  imports = [ ./hardware-configuration.nix ];
+
+  nixpkgs.config = {
+    allowInsecurePredicate = pkg: (pkg.pname) == "broadcom-sta";
+  };
 
   boot.initrd.luks.devices = {
     luksroot = {
