@@ -1,6 +1,6 @@
-{ lib, ... }:
+{ ... }:
 {
-  fileSystems."/boot".device = lib.mkForce "/dev/disk/by-uuid/36A3-B46C";
+  imports = [ ./hardware-configuration.nix ];
 
   boot.initrd.luks.devices = {
     luksroot = {

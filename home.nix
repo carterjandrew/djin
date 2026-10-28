@@ -1,4 +1,4 @@
-{ inputs, config, pkgs, ... }:
+{ inputs, vars, config, pkgs, ... }:
 
 let
   configRoot = "${config.home.homeDirectory}/.config/nixos";
@@ -108,7 +108,7 @@ in {
   programs.bash = {
     enable = true;
     shellAliases = {
-      rebuild = "sudo nixos-rebuild switch";
+      rebuild = "sudo nixos-rebuild switch --flake ${configRoot}#${vars.hostname}";
       secrets = "sudo sops ~/.config/nixos/secrets/secrets.yaml";
     };
   };

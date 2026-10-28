@@ -18,17 +18,10 @@
     })
   ];
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./modules/plasma-workspace.nix
-			# ./nosferatu.nix
-			./djin.nix
-    ];
+  imports = [ ./modules/plasma-workspace.nix ];
 
   nixpkgs.config = {
     allowUnfree = true;
-    allowInsecurePredicate = pkg: (pkg.pname) == "broadcom-sta";
   };
 
   boot.loader.grub.enable = true;
@@ -50,8 +43,6 @@
     source = "/home/carter/.config/nixos/";
     mode = "symlink";
   };
-
-  networking.hostName = "djin"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
