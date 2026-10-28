@@ -30,30 +30,37 @@
     nixcord.url = "github:4evy/nixcord";
   };
 
-  outputs = inputs@{
-    azrah,
-    nixpkgs,
-    sops-nix,
-    home-manager,
-    geometry-change,
-    ...
-  }: {
-    nixosConfigurations.nosferatu = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        ./configuration.nix 
-	sops-nix.nixosModules.sops
-        home-manager.nixosModules.home-manager
-	azrah.nixosModules.default
-	# geometry-change.default
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.users.carter = ./home.nix;
-	  home-manager.backupFileExtension = "backup";
-        }
-      ];
-    };    
-  };
+  outputs = inputs@{ nixpkgs, sops-nix, home-manager, azrah, ... }:
+    let
+      # Each host supplies its own variables and hardware; everything else is shared.
+      mkHost = hostDirectory:
+        let
+          vars = import (hostDirectory + "/vars.nix");
+        in {
+          name = vars.hostname;
+          value = nixpkgs.lib.nixosSystem {
+            specialArgs = { inherit inputs vars; };
+            modules = [
+              ./configuration.nix
+              hostDirectory
+              sops-nix.nixosModules.sops
+              home-manager.nixosModules.home-manager
+              azrah.nixosModules.default
+              {
+                networking.hostName = vars.hostname;
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.extraSpecialArgs = { inherit inputs vars; };
+                home-manager.users.carter = ./home.nix;
+                home-manager.backupFileExtension = "backup";
+              }
+            ];
+          };
+        };
+    in {
+      nixosConfigurations = builtins.listToAttrs (map mkHost [
+        ./hosts/djin
+        ./hosts/nosferatu
+      ]);
+    };
 }

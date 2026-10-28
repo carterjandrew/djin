@@ -18,16 +18,10 @@
     })
   ];
 
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./modules/plasma-workspace.nix
-			./nosferatu.nix
-    ];
+  imports = [ ./modules/plasma-workspace.nix ];
 
   nixpkgs.config = {
     allowUnfree = true;
-    allowInsecurePredicate = pkg: (pkg.pname) == "broadcom-sta";
   };
 
   boot.loader.grub.enable = true;
@@ -45,12 +39,10 @@
   # TODO: Not working?
   # nixpkgs.config.allowUnfree = true;
 
-  # environment.etc."nixos" = {
-  #   source = "/home/carter/.config/nixos/";
-  #   mode = "symlink";
-  # };
-
-  networking.hostName = "nosferatu"; # Define your hostname.
+  environment.etc."nixos" = {
+    source = "/home/carter/.config/nixos/";
+    mode = "symlink";
+  };
 
   # Configure network connections interactively with nmcli or nmtui.
   networking.networkmanager.enable = true;
