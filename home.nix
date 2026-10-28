@@ -2,7 +2,7 @@
 
 let
   configRoot = "${config.home.homeDirectory}/.config/nixos";
-  themeSwitcher = name: colorScheme: themeFile:
+  themeSwitcher = name: colorScheme: themeFile: wallpaper:
     pkgs.writeShellApplication {
       inherit name;
       runtimeInputs = [
@@ -16,6 +16,7 @@ let
           ${inputs.kitty-themes}/themes/${themeFile} \
           "$HOME/.config/kitty/theme.conf"
         pkill -USR1 -u "$UID" kitty 2>/dev/null || true
+        plasma-apply-wallpaperimage "${configRoot}/wallpapers/${wallpaper}"
       '';
     };
 in {
@@ -69,8 +70,9 @@ in {
 		pkgs.kdePackages.markdownpart
     pkgs.kdePackages.kdeconnect-kde
     inputs.geometry-change.packages.${pkgs.system}.default
-    (themeSwitcher "light" "BreezeLight" "Material.conf")
-    (themeSwitcher "dark" "BreezeDark" "Smyck.conf")
+    (themeSwitcher "light" "BreezeLight" "Material.conf" "antigua_volcano.jpg")
+    (themeSwitcher "dark" "BreezeDark" "Smyck.conf" "wizard_trichromic.jpg")
+    (themeSwitcher "orng" "DeepinOrange" "IC_Orange_PPL.conf" "red-temple.jpg")
   ];
 
   # These links point at the checkout instead of the Nix store, so edits to
