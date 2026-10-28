@@ -40,7 +40,6 @@ in {
     pkgs.gimp
     pkgs.fokus
     pkgs.kiwix
-    pkgs.unstable.codex
     pkgs.kitty
     pkgs.neovim
     pkgs.reaper
@@ -50,17 +49,22 @@ in {
     pkgs.blender
     pkgs.neovide
 		pkgs.ripgrep
+		pkgs.hunspell
     pkgs.koreader
     pkgs.obsidian
     pkgs.qutebrowser
+    pkgs.jetbrains-mono
+    pkgs.unstable.codex
     pkgs.signal-desktop
     pkgs.unstable.devenv
+    pkgs.whatsapp-electron
+		pkgs.kdePackages.kparts
     pkgs.unstable.bubblewrap
     pkgs.unstable.thunderbird
-    pkgs.jetbrains-mono
-    pkgs.whatsapp-electron
+		pkgs.libreoffice-qt6-fresh
     pkgs.kdePackages.krohnkite
     pkgs.plasma-panel-colorizer
+		pkgs.kdePackages.markdownpart
     pkgs.kdePackages.kdeconnect-kde
     inputs.geometry-change.packages.${pkgs.system}.default
     (themeSwitcher "light" "BreezeLight" "Material.conf")
@@ -94,6 +98,14 @@ in {
       };
     };
   };
+
+  # services.ollama = {
+	#   enable = true;
+	# 	loadModels = [
+	# 		"gemma3:3b"
+	# 		"deepseek-r1:1.5b"
+	# 	];
+	# };
 
   programs.nixcord = {
     enable = true;
