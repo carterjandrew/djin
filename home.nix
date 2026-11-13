@@ -52,11 +52,12 @@ in {
     pkgs.neovide
 		pkgs.ripgrep
 		pkgs.hunspell
+		pkgs.hunspellDicts.en_US
 		pkgs.inkscape
     pkgs.koreader
-    pkgs.obsidian
     pkgs.qutebrowser
     pkgs.jetbrains-mono
+		pkgs.unstable.discord
     pkgs.unstable.codex
     pkgs.signal-desktop
     pkgs.unstable.devenv
@@ -82,6 +83,11 @@ in {
   xdg.configFile."nvim".source =
     config.lib.file.mkOutOfStoreSymlink "${configRoot}/dotfiles/nvim";
   
+	programs.obsidian = {
+		enable = true;
+		cli.enable = true;
+	};
+
   services.syncthing = {
     enable = true;
     overrideDevices = true;
@@ -111,11 +117,11 @@ in {
 	# 	];
 	# };
 
-  programs.nixcord = {
-    enable = true;
-    discord.vencord.enable = true;
-    discord.vencord.package = pkgs.vencord;
-  };
+  # programs.nixcord = {
+  #   enable = true;
+  #   discord.vencord.enable = true;
+  #   discord.vencord.package = pkgs.vencord;
+  # };
 
   programs.helix = {
     enable = true;

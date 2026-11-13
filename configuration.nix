@@ -6,14 +6,15 @@
 #         \/\______|       \/
 #     Lightning in a bottle
 
-{ pkgs, inputs, ... }:
+{ lib, pkgs, inputs, ... }:
 
 {
 
   nixpkgs.overlays = [
     (final: prev: {
       unstable = import inputs.nixpkgs-unstable {
-      system = prev.stdenv.hostPlatform.system;
+        system = prev.stdenv.hostPlatform.system;
+        config.allowUnfree = true;
       };
     })
   ];
@@ -22,6 +23,12 @@
 
   nixpkgs.config = {
     allowUnfree = true;
+		allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+      "discord"
+    ];
+		permittedInsecurePackages = [
+			"qutebrowser-3.7.0"
+		];
   };
 
   boot.loader.grub.enable = true;

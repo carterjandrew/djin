@@ -10,6 +10,9 @@ vim.opt.shiftwidth = 2    -- Size of an indent (when using >>, <<, or auto-inden
 vim.opt.softtabstop = 2   -- Number of spaces that a Tab feels like while editing
 vim.opt.expandtab = false -- Convert tabs to spaces (set to false if you want actual tabs)
 
+vim.opt.spell = true 
+vim.opt.spelllang = 'en_us'
+
 require("config.lazy")
 require("config.keys")
 
