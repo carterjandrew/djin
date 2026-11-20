@@ -43,6 +43,7 @@ in {
     pkgs.fokus
     pkgs.kiwix
     pkgs.kitty
+		pkgs.ghostty
     pkgs.neovim
     pkgs.reaper
     pkgs.spotify
