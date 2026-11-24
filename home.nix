@@ -98,15 +98,17 @@ in {
         id = "G4VPC2F-TRVCNOF-WLOV2AX-AMPYXFU-VMF6GDA-XZQ5VUA-YHY7LBW-OOTNPAE";
       };
 
-      folders.Music = {
-        path = "/home/carter/Music";
-        devices = [ "server" ];
-      };
+      folders = {
+				Music = {
+					path = "/home/carter/Music";
+					devices = [ "server" ];
+				};
 
-      folders.Notes = {
-        path = "/home/carter/pd/notes";
-        devices = [ "server" ];
-      };
+				"Personal Docs" = {
+					path = "/home/carter/pd";
+					devices = [ "server" ];
+				};
+			};
     };
   };
 
